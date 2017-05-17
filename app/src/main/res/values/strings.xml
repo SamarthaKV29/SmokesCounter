@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Smokes Counter</string>
+    <string name="btn_plus">+</string>
+</resources>
