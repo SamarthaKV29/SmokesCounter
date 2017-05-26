@@ -1,7 +1,10 @@
 package com.rightapps.admin.smokescounter;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,83 +12,123 @@ import android.util.Log;
 import android.widget.TextView;
 import android.view.View;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    Counter counter = new Counter(0,0,0);
-    private Timer daytimer, weektimer;
+    private Counter counter = new Counter();
     private SharedPreferences sf;
     private SharedPreferences.Editor ed;
-    private int oldday = 0;
     private TextView today;
     private TextView week;
     private TextView alltime;
+    private Context ctx;
+    private TextView debuginf;
 
+    public static String getDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+    }
+    public String getInstallDate(Context ctx) {
+        // get app installation date
+
+        PackageManager packageManager =  ctx.getPackageManager();
+        long installTimeInMilliseconds; // install time is conveniently provided in milliseconds
+
+        Date installDate = null;
+        String installDateString = null;
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(ctx.getPackageName(), 0);
+            installTimeInMilliseconds = packageInfo.firstInstallTime;
+            installDateString  = getDate(installTimeInMilliseconds, "MM/dd/yyyy");
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            // an error occurred, so display the Unix epoch
+            installDate = new Date(0);
+            installDateString = installDate.toString();
+        }
+
+        return installDateString;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ctx = getApplicationContext();
         setContentView(R.layout.activity_main);
-        daytimer = new Timer();
-        weektimer = new Timer();
-        today = (TextView) findViewById(R.id.today);
-        week = (TextView) findViewById(R.id.week);
-        alltime = (TextView) findViewById(R.id.alltime);
-        Calendar cal1 = Calendar.getInstance();
-        cal1.set(Calendar.HOUR_OF_DAY, 23);
-        cal1.set(Calendar.MINUTE, 59);
-        cal1.set(Calendar.SECOND, 59);
-        cal1.set(Calendar.MILLISECOND, 59);
         sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         ed = sf.edit();
-        daytimer.schedule(new DayCountTT(), cal1.getTime(), 24 * 60 * 60 * 1000);
-        //daytimer.schedule(new DayCountTT(), cal1.getTime(), 2000);
-        weektimer.schedule(new WeekCountTT(), cal1.getTime(), 7 * 24 * 60 * 60 * 1000);
-        if (sf.contains("launched") && sf.getBoolean("launched", false)) {
-            Log.d("SharedPrefCheck", "Contains Launch "+Integer.toString(sf.getInt("d", 0)));
-            oldday = sf.getInt("startday", 0);
-            counter = new Counter(sf.getInt("d", 0), sf.getInt("w", 0),
-                    sf.getInt("a", 0));
-        } else {
-            Log.d("SharedPrefCheck", "Does not contains Launch");
-            ed.clear();
-            ed.commit();
-            ed.putBoolean("launched", true);
-            Calendar cal = Calendar.getInstance();
-            oldday = cal.get(Calendar.DAY_OF_YEAR);
-            ed.putInt("startday", oldday);
-            ed.commit();
-            counter = new Counter(0, 0, 0);
-            ed.putInt("d", 0);
-            ed.putInt("w", 0);
-            ed.putInt("a", 0);
-            ed.commit();
+        try{
+
+            if(!sf.getBoolean("savedInstallDate", false)){
+                ed.putBoolean("savedInstallDate", true);
+                ed.putString("installDate", getInstallDate(ctx));
+                ed.commit();
+            }
+            today = (TextView) findViewById(R.id.today);
+            week = (TextView) findViewById(R.id.week);
+            alltime = (TextView) findViewById(R.id.alltime);
+            debuginf = (TextView) findViewById(R.id.debuginf);
+        }catch(Exception e){
+            debuginf = (TextView) findViewById(R.id.debuginf);
+            debuginf.setText(e.getMessage());
         }
     }
 
     public void updateCnt(View view){
-        counter.increment();
-        today.setText(Integer.toString(counter.getDaycount()));
-        week.setText(Integer.toString(counter.getDaycount()));
-        alltime.setText(Integer.toString(counter.getDaycount()));
+        if(today == null || week == null || alltime == null)
+            return;
+        try{
+            counter.increment();
+            today.setText(Integer.toString(counter.getDaycount()));
+            week.setText(Integer.toString(counter.getDaycount()));
+            alltime.setText(Integer.toString(counter.getDaycount()));
+        }catch(Exception e){
+            debuginf = (TextView) findViewById(R.id.debuginf);
+            debuginf.setText(e.getMessage());
+        }
 
     }
 
     public void decreCnt(View view){
-        counter.decrement();
-        today.setText(Integer.toString(counter.getDaycount()));
-        week.setText(Integer.toString(counter.getDaycount()));
-        alltime.setText(Integer.toString(counter.getDaycount()));
+        if(today == null || week == null || alltime == null)
+            return;
+        try{
+            counter.decrement();
+            today.setText(Integer.toString(counter.getDaycount()));
+            week.setText(Integer.toString(counter.getDaycount()));
+            alltime.setText(Integer.toString(counter.getDaycount()));
+        }catch(Exception e){
+            debuginf = (TextView) findViewById(R.id.debuginf);
+            debuginf.setText(e.getMessage());
+        }
     }
 
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-        today.setText(Integer.toString(counter.getDaycount()));
-        week.setText(Integer.toString(counter.getWeektotal()));
-        alltime.setText(Integer.toString(counter.getAlltimetotal()));
+        try{
+            if(sf.getBoolean("savedInstallDate", false)){
+                debuginf.setText(sf.getString("installDate", ""));
+            }
+            today.setText(Integer.toString(counter.getDaycount()));
+            week.setText(Integer.toString(counter.getWeektotal()));
+            alltime.setText(Integer.toString(counter.getAlltimetotal()));
+        }catch(Exception e){
+
+        }
+
     }
 
     @Override
@@ -97,40 +140,6 @@ public class MainActivity extends AppCompatActivity {
         ed.putInt("w", counter.getWeektotal());
         ed.putInt("a", counter.getAlltimetotal());
         ed.commit();
-    }
-
-    private class DayCountTT extends TimerTask {
-
-        @Override
-        public void run() {
-            sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            ed = sf.edit();
-            counter.daycountholder.add(counter.getDaycount());
-            counter = new Counter(0, counter.getWeektotal(),
-                    counter.getAlltimetotal());
-            ed.putInt("d", counter.getDaycount());
-            ed.putInt("w", counter.getWeektotal());
-            ed.putInt("a", counter.getAlltimetotal());
-            ed.commit();
-        }
-
-    }
-
-    private class WeekCountTT extends TimerTask {
-
-        @Override
-        public void run() {
-            sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            ed = sf.edit();
-            counter.weekcountholder.add(counter.getWeektotal());
-            counter = new Counter(counter.getDaycount(), 0,
-                    counter.getAlltimetotal());
-            ed.putInt("d", counter.getDaycount());
-            ed.putInt("w", counter.getWeektotal());
-            ed.putInt("a", counter.getAlltimetotal());
-            ed.commit();
-        }
-
     }
 }
 

@@ -1,5 +1,7 @@
 package com.rightapps.admin.smokescounter;
+
 import java.util.ArrayList;
+
 /**
  * Created by Admin on 5/12/2017.
  */
@@ -11,26 +13,30 @@ public class Counter {
     public ArrayList<Integer> daycountholder;
     public ArrayList<Integer> weekcountholder;
 
-    public Counter(int c, int w, int a) {
-        alltimetotal = a;
-        weektotal = w;
-        daycount = c;
+    public Counter() {
+        alltimetotal = 0;
+        weektotal = 0;
+        daycount = 0;
         daycountholder = new ArrayList<Integer>();
         weekcountholder = new ArrayList<Integer>();
     }
 
     public void increment() {
-        daycount+=1;
-        weektotal+=1;
-        alltimetotal+=1;
+        daycount += 1;
+        weektotal += 1;
+        alltimetotal += 1;
     }
 
     public void decrement() {
-        if(daycount > 0){
-            daycount-=1;
-            weektotal-=1;
-            alltimetotal-=1;
+        if (daycount > 0 && weektotal > 0 && alltimetotal > 0) {
+            daycount -= 1;
+            weektotal -= 1;
+            alltimetotal -= 1;
         }
+    }
+
+    public void addtoweek() {
+        daycountholder.size();
     }
 
     public int getDaycount() {
