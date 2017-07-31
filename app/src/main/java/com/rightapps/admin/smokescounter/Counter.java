@@ -7,13 +7,11 @@ public class Counter {
     private int weektotal;
     private int alltimetotal;
 
-    public ArrayList<Integer> weekcountholder;
-
     public Counter() {
         alltimetotal = 0;
         weektotal = 0;
         daycount = 0;
-        weekcountholder = new ArrayList<Integer>();
+
     }
     public Counter(int dc,int wc,int at){
         alltimetotal = at;
@@ -35,9 +33,6 @@ public class Counter {
         }
     }
 
-    public void addtoweek() {
-        weekcountholder.add(this.weektotal);
-    }
 
 
 
