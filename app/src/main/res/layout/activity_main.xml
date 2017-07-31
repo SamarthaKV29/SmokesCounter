@@ -30,6 +30,7 @@
 
         <ImageView
             android:id="@+id/imageView"
+            android:contentDescription="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/smokescount512"
@@ -40,13 +41,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp">
 
             <TextView
-                android:id="@+id/alltime"
+                android:id="@+id/today"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -55,6 +59,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textAlignment="center"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -67,10 +72,11 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textAlignment="center"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/today"
+                android:id="@+id/alltime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -79,6 +85,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textAlignment="center"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -98,7 +105,7 @@
                 android:editable="false"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
-                android:text="Day Count"
+                android:text="@string/day_count"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
@@ -112,7 +119,7 @@
                 android:editable="false"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
-                android:text="Week count"
+                android:text="@string/week_count"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
@@ -126,7 +133,7 @@
                 android:editable="false"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
-                android:text="All Time"
+                android:text="@string/all_time"
                 android:textAlignment="center"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -147,7 +154,8 @@
                 android:background="@drawable/plusbtn"
                 android:elevation="10dp"
                 android:onClick="updateCnt"
-                android:padding="1dp" />
+                android:padding="1dp"
+                style="?android:attr/buttonBarButtonStyle"/>
 
             <Button
                 android:id="@+id/btn_minus"
@@ -159,18 +167,9 @@
                 android:background="@drawable/minusbtn"
                 android:elevation="10dp"
                 android:onClick="decreCnt"
-                android:padding="1dp" />
+                android:padding="1dp"
+                style="?android:attr/buttonBarButtonStyle"/>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/debuginf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:text="TextView"
-            android:textAlignment="center" />
 
     </LinearLayout>
 

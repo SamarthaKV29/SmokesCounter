@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Smokes Counter</string>
     <string name="btn_plus">+</string>
+    <string name="day_count">Day Count</string>
+    <string name="week_count">Week count</string>
+    <string name="all_time">All Time</string>
+
 </resources>
