@@ -8,11 +8,10 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.view.View;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +20,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    private Counter counter = new Counter();
+    private Counter counter;
     private SharedPreferences sf;
     private SharedPreferences.Editor ed;
     private TextView today;
@@ -46,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         PackageManager packageManager =  ctx.getPackageManager();
         long installTimeInMilliseconds; // install time is conveniently provided in milliseconds
 
-        Date installDate = null;
-        String installDateString = null;
+        Date installDate;
+        String installDateString = "";
         try {
             PackageInfo packageInfo = packageManager.getPackageInfo(ctx.getPackageName(), 0);
             installTimeInMilliseconds = packageInfo.firstInstallTime;
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         ed = sf.edit();
         try{
-
             if(!sf.getBoolean("savedInstallDate", false)){
                 ed.putBoolean("savedInstallDate", true);
                 ed.putString("installDate", getInstallDate(ctx));
@@ -78,10 +76,9 @@ public class MainActivity extends AppCompatActivity {
             today = (TextView) findViewById(R.id.today);
             week = (TextView) findViewById(R.id.week);
             alltime = (TextView) findViewById(R.id.alltime);
-            debuginf = (TextView) findViewById(R.id.debuginf);
+            counter = new Counter();
         }catch(Exception e){
-            debuginf = (TextView) findViewById(R.id.debuginf);
-            debuginf.setText(e.getMessage());
+            catch_a(e);
         }
     }
 
@@ -94,10 +91,14 @@ public class MainActivity extends AppCompatActivity {
             week.setText(Integer.toString(counter.getDaycount()));
             alltime.setText(Integer.toString(counter.getDaycount()));
         }catch(Exception e){
-            debuginf = (TextView) findViewById(R.id.debuginf);
-            debuginf.setText(e.getMessage());
+            catch_a(e);
         }
 
+    }
+
+    public void catch_a(Exception e){
+        Toast t = Toast.makeText(ctx, e.getMessage(), Toast.LENGTH_LONG);
+        t.show();
     }
 
     public void decreCnt(View view){
@@ -109,8 +110,7 @@ public class MainActivity extends AppCompatActivity {
             week.setText(Integer.toString(counter.getDaycount()));
             alltime.setText(Integer.toString(counter.getDaycount()));
         }catch(Exception e){
-            debuginf = (TextView) findViewById(R.id.debuginf);
-            debuginf.setText(e.getMessage());
+            catch_a(e);
         }
     }
 
@@ -120,13 +120,17 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         try{
             if(sf.getBoolean("savedInstallDate", false)){
-                debuginf.setText(sf.getString("installDate", ""));
+                Toast t = Toast.makeText(ctx, sf.getString("installDate", "Not Saved"), Toast.LENGTH_LONG);
+            }
+            //
+            if(sf.contains("a") && sf.contains("w") && sf.contains("d")){
+                counter = new Counter(sf.getInt("d", 0), sf.getInt("w", 0), sf.getInt("a", 0));
             }
             today.setText(Integer.toString(counter.getDaycount()));
             week.setText(Integer.toString(counter.getWeektotal()));
             alltime.setText(Integer.toString(counter.getAlltimetotal()));
         }catch(Exception e){
-
+            catch_a(e);
         }
 
     }
@@ -134,12 +138,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        ed = sf.edit();
-        ed.putInt("d", counter.getDaycount());
-        ed.putInt("w", counter.getWeektotal());
-        ed.putInt("a", counter.getAlltimetotal());
-        ed.commit();
+        try{
+            sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            ed = sf.edit();
+            ed.putInt("d", counter.getDaycount());
+            ed.putInt("w", counter.getWeektotal());
+            ed.putInt("a", counter.getAlltimetotal());
+            ed.commit();
+        }
+        catch (Exception e){
+            catch_a(e);
+        }
     }
 }
 

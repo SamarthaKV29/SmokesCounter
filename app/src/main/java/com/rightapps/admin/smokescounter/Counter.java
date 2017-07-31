@@ -2,23 +2,23 @@ package com.rightapps.admin.smokescounter;
 
 import java.util.ArrayList;
 
-/**
- * Created by Admin on 5/12/2017.
- */
-
 public class Counter {
     private int daycount;
     private int weektotal;
     private int alltimetotal;
-    public ArrayList<Integer> daycountholder;
+
     public ArrayList<Integer> weekcountholder;
 
     public Counter() {
         alltimetotal = 0;
         weektotal = 0;
         daycount = 0;
-        daycountholder = new ArrayList<Integer>();
         weekcountholder = new ArrayList<Integer>();
+    }
+    public Counter(int dc,int wc,int at){
+        alltimetotal = at;
+        weektotal = wc;
+        daycount = dc;
     }
 
     public void increment() {
@@ -36,8 +36,33 @@ public class Counter {
     }
 
     public void addtoweek() {
-        daycountholder.size();
+        weekcountholder.add(this.weektotal);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public int getDaycount() {
         return daycount;
