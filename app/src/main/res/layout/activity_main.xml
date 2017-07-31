@@ -87,6 +87,7 @@
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -169,6 +170,40 @@
                 android:onClick="decreCnt"
                 android:padding="1dp"
                 style="?android:attr/buttonBarButtonStyle"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <Button
+                android:id="@+id/resbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="resetSt"
+                android:text="Reset All" />
+
+            <TextView
+                android:id="@+id/info1"
+                style="@android:style/Widget.Material.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="10dp"
+                android:ems="10"
+                android:padding="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>
