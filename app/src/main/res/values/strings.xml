@@ -5,4 +5,7 @@
     <string name="week_count">Week count</string>
     <string name="all_time">All Time</string>
 
+    <string name="tab_text_1">Hello tab!</string>
+    <string name="tab_text_2">Hello_tab2</string>
+
 </resources>
